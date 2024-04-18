@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h3>Записи</h3>
+<br>
+    <ul>
+        {% for todo in todos %}
+            <div class="alert alert-primary" role="alert">
+                <li>
+                <strong>Title:</strong> {{ todo.title }}<br>
+                <strong>Description:</strong> {{ todo.description }}<br>
+                <strong>Due Date:</strong> {{ todo.due_date }}<br>
+                <strong>Status:</strong> {% if todo.status %}Done{% else %}Pending{% endif %}<br>
+                <strong>Created by:</strong> {{ todo.user.username }}<br>
+                <hr>
+                <a href="{% url 'todo_detail' todo.pk %}">Detail</a>
+                {% if request.user == todo.user %}
+                    <form action="{% url 'todo_delete' todo.pk %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit">Delete</button>
+                    </form>
+                {% else %}
+                    <span style="padding-left: 20px;"> Это не ваш POST)</span>
+                {% endif %}
+            </li>
+        {% empty %}
+            <li>No todos found.</li>
+            </div>
+        {% endfor %}
+    </ul>
+
+{% endblock %}
